@@ -1,3 +1,6 @@
+-- Well, I tried. This is such mess and I can do this in Python much more
+-- cleanly. Maybe this will help someone else.
+
 http = require("socket.http")
 
 function parseargs(s)
