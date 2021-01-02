@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<dwml version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://graphical.weather.gov/xml/DWMLgen/schema/DWML.xsd">
+  <head>
+    <product concise-name="dwmlByDay" operational-mode="developmental" srsName="WGS 1984">
+      <creation-date refresh-frequency='PT1H'>2020-12-30T03:46:09-07:00</creation-date>
+     <category>current observations and forecast</category>
+    </product>
+    <source>
+      <production-center>Denver-Boulder, CO</production-center>
+      <credit>https://www.weather.gov/bou</credit>
+      <more-information>http://www.nws.noaa.gov/forecasts/xml/</more-information>
+    </source>
+  </head>
+  <data type="forecast">
+
+  <location>
+    <location-key>point1</location-key>
+    <description>Gateway, CO</description>
+    <point latitude="39.53" longitude="-104.91"/>
+    <city state="CO">Gateway</city>
+    <height datum="mean sea level">5951</height>
+  </location>
+<moreWeatherInformation applicable-location="point1">http://forecast.weather.gov/MapClick.php?lat=39.53&amp;lon=-104.91</moreWeatherInformation>
+  <time-layout time-coordinate="local" summarization="12hourly">
+    <layout-key>k-p12h-n13-1</layout-key>
+      <start-valid-time period-name="Today">2020-12-30T10:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Tonight">2020-12-30T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Thursday">2020-12-31T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Thursday Night">2020-12-31T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="New Year's Day">2021-01-01T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Friday Night">2021-01-01T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Saturday">2021-01-02T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Saturday Night">2021-01-02T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Sunday">2021-01-03T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Sunday Night">2021-01-03T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Monday">2021-01-04T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Monday Night">2021-01-04T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Tuesday">2021-01-05T06:00:00-07:00</start-valid-time>
+  </time-layout>
+
+  <time-layout time-coordinate="local" summarization="12hourly">
+    <layout-key>k-p24h-n7-1</layout-key>
+      <start-valid-time period-name="Today">2020-12-30T10:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Thursday">2020-12-31T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="New Year's Day">2021-01-01T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Saturday">2021-01-02T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Sunday">2021-01-03T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Monday">2021-01-04T06:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Tuesday">2021-01-05T06:00:00-07:00</start-valid-time>
+  </time-layout>
+
+  <time-layout time-coordinate="local" summarization="12hourly">
+    <layout-key>k-p24h-n6-2</layout-key>
+      <start-valid-time period-name="Tonight">2020-12-30T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Thursday Night">2020-12-31T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Friday Night">2021-01-01T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Saturday Night">2021-01-02T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Sunday Night">2021-01-03T18:00:00-07:00</start-valid-time>
+      <start-valid-time period-name="Monday Night">2021-01-04T18:00:00-07:00</start-valid-time>
+  </time-layout>
+
+
+  <parameters applicable-location="point1">
+
+    <temperature type="maximum" units="Fahrenheit" time-layout="k-p24h-n7-1">
+      <name>Daily Maximum Temperature</name>
+        <value>42</value>
+        <value>44</value>
+        <value>38</value>
+        <value>48</value>
+        <value>51</value>
+        <value>48</value>
+        <value>46</value>
+    </temperature>
+
+    <temperature type="minimum" units="Fahrenheit" time-layout="k-p24h-n6-2">
+      <name>Daily Minimum Temperature</name>
+        <value>22</value>
+        <value>24</value>
+        <value>21</value>
+        <value>25</value>
+        <value>29</value>
+        <value>27</value>
+    </temperature>
+
+    <probability-of-precipitation  type="12 hour" units="percent" time-layout="k-p12h-n13-1">
+      <name>12 Hourly Probability of Precipitation</name>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+        <value xsi:nil="true"></value>
+    </probability-of-precipitation>
+
+    <weather time-layout="k-p12h-n13-1">
+      <name>Weather Type, Coverage, Intensity</name>
+        <weather-conditions weather-summary="Sunny"/>
+        <weather-conditions weather-summary="Mostly Clear"/>
+        <weather-conditions weather-summary="Mostly Sunny"/>
+        <weather-conditions weather-summary="Mostly Cloudy"/>
+        <weather-conditions weather-summary="Partly Sunny"/>
+        <weather-conditions weather-summary="Mostly Clear"/>
+        <weather-conditions weather-summary="Sunny"/>
+        <weather-conditions weather-summary="Partly Cloudy"/>
+        <weather-conditions weather-summary="Mostly Sunny"/>
+        <weather-conditions weather-summary="Partly Cloudy"/>
+        <weather-conditions weather-summary="Mostly Sunny"/>
+        <weather-conditions weather-summary="Partly Cloudy"/>
+        <weather-conditions weather-summary="Mostly Sunny"/>
+    </weather>
+
+    <conditions-icon type="forecast-NWS" time-layout="k-p12h-n13-1">
+      <name>Conditions Icon</name>        <icon-link>http://forecast.weather.gov/newimages/medium/few.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/nfew.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/sct.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/nbkn.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/bkn.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/nfew.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/few.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/nsct.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/sct.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/nsct.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/sct.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/nsct.png</icon-link>
+        <icon-link>http://forecast.weather.gov/newimages/medium/sct.png</icon-link>
+    </conditions-icon>
+
+    <wordedForecast time-layout="k-p12h-n13-1" dataSource="bouNetcdf" wordGenerator="markMitchell">
+      <name>Text Forecast</name>
+        <text>Sunny, with a high near 42. South wind around 6 mph. </text>
+        <text>Mostly clear, with a low around 22. South southwest wind around 8 mph. </text>
+        <text>Mostly sunny, with a high near 44. South southwest wind around 6 mph becoming north northeast in the afternoon. </text>
+        <text>Mostly cloudy, with a low around 24. Northwest wind around 6 mph. </text>
+        <text>Partly sunny, with a high near 38. North northwest wind 6 to 9 mph, with gusts as high as 20 mph. </text>
+        <text>Mostly clear, with a low around 21.</text>
+        <text>Sunny, with a high near 48.</text>
+        <text>Partly cloudy, with a low around 25.</text>
+        <text>Mostly sunny, with a high near 51.</text>
+        <text>Partly cloudy, with a low around 29.</text>
+        <text>Mostly sunny, with a high near 48.</text>
+        <text>Partly cloudy, with a low around 27.</text>
+        <text>Mostly sunny, with a high near 46.</text>
+    </wordedForecast>
+
+</parameters>
+</data>
+<data type="current observations">
+	<location>
+		<location-key>point1</location-key>
+		<point latitude="39.56" longitude="-104.85"/>
+		<area-description>Denver - Centennial Airport, CO</area-description>
+		<height datum="mean sea level" height-units="feet">5869</height>
+	</location>
+	<moreWeatherInformation applicable-location="point1">http://www.nws.noaa.gov/data/obhistory/KAPA.html</moreWeatherInformation>	<time-layout time-coordinate="local">	<layout-key>k-p1h-n1-1</layout-key>	<start-valid-time period-name="current">2020-12-30T09:53:00-07:00</start-valid-time>	</time-layout>	<parameters applicable-location="point1">	<temperature type="apparent" units="Fahrenheit" time-layout="k-p1h-n1-1">	<value>31</value>	</temperature>	<temperature type="dew point" units="Fahrenheit" time-layout="k-p1h-n1-1">	<value>4</value>	</temperature>	<humidity type="relative" time-layout="k-p1h-n1-1">	<value>31</value>	</humidity>	<weather time-layout="k-p1h-n1-1">	<name>Weather Type, Coverage, Intensity</name>	<weather-conditions weather-summary="Fair"/>	<weather-conditions>	<value>	<visibility units="statute miles">10.00</visibility>	</value>	</weather-conditions>	</weather>	<conditions-icon type="forecast-NWS" time-layout="k-p1h-n1-1">	<name>Conditions Icon</name>	<icon-link>http://forecast.weather.gov/newimages/medium/sct.png</icon-link>	</conditions-icon>	<direction type="wind" units="degrees true" time-layout="k-p1h-n1-1">	<value>210</value>	</direction>	<wind-speed type="gust" units="knots" time-layout="k-p1h-n1-1">	<value>NA</value>	</wind-speed>	<wind-speed type="sustained" units="knots" time-layout="k-p1h-n1-1">	<value>7</value>	</wind-speed>		<pressure type="barometer" units="inches of mercury" time-layout="k-p1h-n1-1">			<value>30.08</value>		</pressure>	</parameters></data></dwml>
