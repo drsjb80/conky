@@ -2,6 +2,7 @@
 
 import io
 import re
+import sys
 import textwrap
 import os.path
 import urllib.request
@@ -50,32 +51,36 @@ def get_forecast(forecast):
     icons = get_forecast_conditions_icon(forecast_parameters)
     days = get_forecast_days(forecast)
     words = get_forecast_weather(forecast_parameters)
+    maxs = get_forecast_maximum_temperatures(forecast_parameters)
+    mins = get_forecast_minimum_temperatures(forecast_parameters)
+    maxs_and_mins = [j for i in zip(maxs,mins) for j in i]
     assert len(icons) == len(days) == len(words)
 
-    zipped = zip(icons, days, words)
+    zipped = zip(icons, days, words, maxs_and_mins)
     # print(list(zipped))
-
 
     count = 0
     for i in zipped:
-        offset = 100 if count % 2 else 0
+        offset = 100 if count % 2 == 1 else 0
         row = int(count/2)
+
         print("${{image {} -p {},{}}}".format(get_icon(i[0]), offset,
             120 + row * 100, end=''))
 
         print('${{goto 200}}{}: {}'.format(i[1].attrib['period-name'],
             i[2].attrib["weather-summary"]), end='')
 
-        if count != 0 and count % 2:
+        if count != 0 and count % 2 == 1:
             print()
-            print('${{goto 200}}{}'.format('High/low'))
-            print('${voffset 10}')
+            print('${{goto 200}}{}/{}'.format(save, 
+                i[3].text if i[3] is not None else 'NA'))
+            print('${voffset 9}')
+        else:
+            save = i[3].text
 
         count += 1
 
-    # maxs = get_forecast_maximum_temperatures(forecast_parameters)
-    # mins = get_forecast_minimum_temperatures(forecast_parameters)
-    # maxs_and_mins = [j for i in zip(maxs,b) for j in i]
+
     # moreWeatherInformation = forecast.find('./moreWeatherInformation')
     # print('get_forecast_forecast', get_worded_forecast(forecast_parameters))
 
@@ -116,13 +121,13 @@ def get_current(current):
 
     print('Temp:${{goto 100}}{}'.format(
         get_current_temperature(current_parameters)), end='')
-    print('${{goto 300}}Speed:${{goto 400}}{}'.format(
+    print('${{goto 300}}Wind speed:${{goto 410}}{}'.format(
         get_current_wind_speed(current_parameters)), end='')
     print()
 
     print('RH:${{goto 100}}{}'.format(
         get_current_humidity(current_parameters)), end='')
-    print('${{goto 300}}Direction:${{goto 400}}{}'.format(
+    print('${{goto 300}}Direction:${{goto 410}}{}'.format(
         get_current_wind_direction(current_parameters)), end='')
     print()
 
@@ -136,16 +141,16 @@ def get_current(current):
 
 
 # https://stackoverflow.com/questions/59067649/assert-true-vs-assert-is-not-none
-
 '''
 with open('/home/stevebeaty/src/conky/weather.gov') as response:
     html = response.read()
     tree = xml.etree.ElementTree.parse(io.StringIO(html))
 '''
-
+# print('getting forecast', file=sys.stderr)
 with urllib.request.urlopen(url) as response:
     html = response.read()
     tree = xml.etree.ElementTree.parse(io.BytesIO(html))
+
     root = tree.getroot()
 
     forecast = root.find('./data[@type="forecast"]')

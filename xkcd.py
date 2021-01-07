@@ -15,13 +15,13 @@ class MyHTMLParser(HTMLParser):
             width, height = imagesize.get(filename)
             xscale = width / 450
             yscale = height / 450
-            scale = xscacle if xscale > yscale else yscale
+            scale = xscale if xscale > yscale else yscale
             print('${{image {} -s {}x{}}}'.format(filename, 
                 int(width/scale), int(height/scale)))
             sys.exit()
 
 with urllib.request.urlopen('https://xkcd.com/') as response:
-    print('XKCDing', file=sys.stderr)
+    # print('XKCDing', file=sys.stderr)
     parser = MyHTMLParser()
     parser.feed(str(response.read()))
 
