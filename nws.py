@@ -141,14 +141,15 @@ class Current:
 
 # https://stackoverflow.com/questions/59067649/assert-true-vs-assert-is-not-none
 '''
-with urllib.request.urlopen(url) as response:
-    html = response.read()
-    tree = xml.etree.ElementTree.parse(io.BytesIO(html))
-'''
-# print('getting forecast', file=sys.stderr)
 with open('/Users/stevebeaty/src/conky/weather.gov') as response:
     html = response.read()
     tree = xml.etree.ElementTree.parse(io.StringIO(html))
+'''
+# print('getting forecast', file=sys.stderr)
+
+with urllib.request.urlopen(url) as response:
+    html = response.read()
+    tree = xml.etree.ElementTree.parse(io.BytesIO(html))
 
     root = tree.getroot()
 
