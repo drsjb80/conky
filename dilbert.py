@@ -5,8 +5,6 @@ from html.parser import HTMLParser
 from datetime import date
 import imagesize
 
-# call only once a day
-
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'meta':
@@ -14,9 +12,12 @@ class MyHTMLParser(HTMLParser):
                 if attr[0] == 'property' and attr[1] == 'og:image':
                     urllib.request.urlretrieve(attrs[1][1], '/tmp/dilbert.gif')
                     width, height = imagesize.get("/tmp/dilbert.gif")
-                    scale = width / 450
+                    xscale = width / int(sys.argv[1])
+                    yscale = width / int(sys.argv[2])
+                    scale = xscale if xscale > yscale else yscale
                     print('${{image /tmp/dilbert.gif -s {}x{}}}'.format(int(width/scale), int(height/scale)))
-                    sys.exit()
+                    print('fetched dilbert', file=sys.stderr)
+                    sys.exit(0)
                             
 url = 'https://dilbert.com/strip/' + date.today().strftime("%Y-%m-%d")
 with urllib.request.urlopen(url) as response:

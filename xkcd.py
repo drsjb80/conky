@@ -13,12 +13,17 @@ class MyHTMLParser(HTMLParser):
         if tag == 'meta' and attrs[0][1] == 'og:image':
             urllib.request.urlretrieve(attrs[1][1], filename)
             width, height = imagesize.get(filename)
-            xscale = width / 450
-            yscale = height / 450
+            xscale = width / int(sys.argv[1])
+            # print('xscale:', xscale, file=sys.stderr)
+            yscale = height / int(sys.argv[2])
+            # print('yscale:', yscale, file=sys.stderr)
             scale = xscale if xscale > yscale else yscale
+            # print('scale:', scale, file=sys.stderr)
+            # print(int(width/scale), file=sys.stderr)
+            # print(int(height/scale), file=sys.stderr)
             print('${{image {} -s {}x{}}}'.format(filename, 
                 int(width/scale), int(height/scale)))
-            sys.exit()
+            sys.exit(0)
 
 with urllib.request.urlopen('https://xkcd.com/') as response:
     # print('XKCDing', file=sys.stderr)
