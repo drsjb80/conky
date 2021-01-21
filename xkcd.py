@@ -5,8 +5,6 @@ from html.parser import HTMLParser
 from datetime import date
 import imagesize
 
-# call only once a day
-
 filename = '/tmp/xkcd.png'
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
