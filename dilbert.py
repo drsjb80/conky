@@ -13,13 +13,12 @@ class MyHTMLParser(HTMLParser):
                     urllib.request.urlretrieve(attrs[1][1], '/tmp/dilbert.gif')
                     width, height = imagesize.get("/tmp/dilbert.gif")
                     xscale = width / int(sys.argv[1])
-                    yscale = width / int(sys.argv[2])
+                    yscale = height / int(sys.argv[2])
                     scale = xscale if xscale > yscale else yscale
-                    print('${{image /tmp/dilbert.gif -s {}x{}}}'.format(int(width/scale), int(height/scale)))
-                    print('fetched dilbert', file=sys.stderr)
-                    sys.exit(0)
-                            
+                    # print('${{image /tmp/dilbert.gif -s {}x{}}}'.format(int(width/scale), int(height/scale)))
+
 url = 'https://dilbert.com/strip/' + date.today().strftime("%Y-%m-%d")
 with urllib.request.urlopen(url) as response:
     parser = MyHTMLParser()
     parser.feed(str(response.read()))
+    print('fetched:', url, file=sys.stderr)
