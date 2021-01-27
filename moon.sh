@@ -1,14 +1,15 @@
 #! /usr/bin/env bash
 
-curl -s -o $$ https://www.moongiant.com/phase/today/
+curl -s -o /tmp/$$ https://www.moongiant.com/phase/today/
 
-image=$(grep 'div id="todayMoonContainer"' < $$ | \
+image=$(grep 'div id="todayMoonContainer"' < /tmp/$$ | \
     sed -e 's/.*src="//' -e 's/".*//' -e 's,^,https://www.moongiant.com,')
 
-curl -s -o /tmp/moon.jpg ${image}
+curl -s -o /tmp/moon.jpg "${image}"
 echo '${image /tmp/moon.jpg -f}'
 
-age=$(grep "Moon Age" < $$  | 
+age=$(grep "Moon Age" < /tmp/$$  | 
     sed -e 's/^  *//' -e 's,<span>,,g' -e 's,</span>,,g' -e 's,<br>,,')
-echo '${alignc}'${age}
+echo '${alignc}'"${age}"
 
+rm /tmp/$$
