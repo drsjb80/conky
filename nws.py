@@ -16,7 +16,12 @@ def get_icon(url):
     ''' Retrieve an icon and return the file name where it was saved. '''
     filename = '/tmp/' + re.sub(r'.*/', '', url.text)
     if not os.path.isfile(filename):
-        urllib.request.urlretrieve(url.text, filename)
+        try:
+            urllib.request.urlretrieve(url.text, filename)
+        except ValueError as ve:
+            print(ve)
+            print(url)
+            print(filename)
     return filename
 
 class Forecast:
