@@ -1,0 +1,5 @@
+conky -dc dilbert.conf
+conky -dc xkcd.conf
+conky -dc nwsmap.conf
+conky -dc nws.conf
+
