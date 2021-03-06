@@ -146,8 +146,7 @@ class Current:
 
     def get_current(self):
         ''' Gather all the current information and print it out in conky format. '''
-        print('${{alignc}}{}'.format(
-            self.get_current_weather()))
+        print(self.get_current_weather())
 
         print('Temp:${{goto 100}}{}'.format(
             self.get_current_temperature()), end='')
@@ -178,28 +177,31 @@ with open('~/src/conky/weather.gov') as response:
 '''
 # print('getting forecast', file=sys.stderr)
 
-with urllib.request.urlopen(url) as response:
-    html = response.read()
-    tree = xml.etree.ElementTree.parse(io.BytesIO(html))
+try:
+    with urllib.request.urlopen(url) as response:
+        html = response.read()
+        tree = xml.etree.ElementTree.parse(io.BytesIO(html))
 
-    root = tree.getroot()
+        root = tree.getroot()
 
-    forecast = root.find('./data[@type="forecast"]')
-    if forecast is None:
-        print('No forecast found')
+        forecast = root.find('./data[@type="forecast"]')
+        if forecast is None:
+            print('No forecast found')
 
-    fourteen = forecast.find('./time-layout/layout-key[.="' + layout_key + '"]')
-    if fourteen is None:
-        layout_key = 'k-p12h-n13-1'
-        thirteen = forecast.find('./time-layout/layout-key[.="' + layout_key + '"]')
-        if thirteen is None:
-            print('No time layout found')
-            sys.exit(1)
+        fourteen = forecast.find('./time-layout/layout-key[.="' + layout_key + '"]')
+        if fourteen is None:
+            layout_key = 'k-p12h-n13-1'
+            thirteen = forecast.find('./time-layout/layout-key[.="' + layout_key + '"]')
+            if thirteen is None:
+                print('No time layout found')
+                sys.exit(1)
 
-    current = root.find('./data[@type="current observations"]')
-    if current is None:
-        print('Error: no current conditions found')
-    else:
-        Current(current).get_current()
+        current = root.find('./data[@type="current observations"]')
+        if current is None:
+            print('Error: no current conditions found')
+        else:
+            Current(current).get_current()
 
-    Forecast(forecast).get_forecast()
+        Forecast(forecast).get_forecast()
+except:
+    print('Failed to fetch:' + url)
