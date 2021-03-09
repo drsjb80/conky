@@ -146,27 +146,17 @@ class Current:
 
     def get_current(self):
         ''' Gather all the current information and print it out in conky format. '''
-        print(self.get_current_weather())
+        print(self.get_current_weather(), end='')
+        print('${{goto 300}}Wind speed:${{goto 410}}{}'.format(self.get_current_wind_speed()))
 
-        print('Temp:${{goto 100}}{}'.format(
-            self.get_current_temperature()), end='')
-        print('${{goto 300}}Wind speed:${{goto 410}}{}'.format(
-            self.get_current_wind_speed()), end='')
-        print()
+        print('Temp:${{goto 100}}{}'.format(self.get_current_temperature()), end='')
+        print('${{goto 300}}Direction:${{goto 410}}{}'.format(self.get_current_wind_direction()))
 
-        print('RH:${{goto 100}}{}'.format(
-            self.get_current_humidity()), end='')
-        print('${{goto 300}}Direction:${{goto 410}}{}'.format(
-            self.get_current_wind_direction()), end='')
-        print()
-
-        print('Pressure:${{goto 100}}{}'.format(
-            self.get_current_pressure()), end='')
-
-        print()
+        print('RH:${{goto 100}}{}'.format(self.get_current_humidity()), end='')
+        print('${{goto 300}}Pressure:${{goto 410}}{}'.format(self.get_current_pressure()))
 
         filename = self.get_current_weather_icon()
-        print("${{image {} -p 200,25}}".format(filename))
+        print("${{image {} -p 200,0}}".format(filename))
 
 
 # https://stackoverflow.com/questions/59067649/assert-true-vs-assert-is-not-none
