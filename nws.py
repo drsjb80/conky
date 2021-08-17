@@ -8,7 +8,9 @@ import urllib.request
 import xml.etree.ElementTree
 
 url = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
-    '&lon=' + sys.argv[2] + '&unit=0&lg=english&FcstType=dwml'
+    '&lon=' + sys.argv[2] + '&FcstType=dwml'
+
+print(url, file=sys.stderr)
 
 layout_key = 'k-p12h-n14-1'
 
