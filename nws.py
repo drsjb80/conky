@@ -7,12 +7,28 @@ import os.path
 import urllib.request
 import xml.etree.ElementTree
 
-url = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
-    '&lon=' + sys.argv[2] + '&FcstType=dwml'
+LAYOUT_KEY = 'k-p12h-n14-1'
 
-# print(url, file=sys.stderr)
+def print_forecast(zipped):
+    ''' Print out all the forecast information in conky format. '''
+    count = 0
+    for i in zipped:
+        offset = 100 if count % 2 == 1 else 0
+        row = int(count/2)
 
-layout_key = 'k-p12h-n14-1'
+        print("${{image {} -p {},{}}}".format(get_icon(i[0]), offset, \
+            120 + row * 100, end=''))
+        print('${{goto 200}}{}: {}'.format(i[1].attrib['period-name'], \
+            i[2].attrib["weather-summary"]), end='')
+
+        if count != 0 and count % 2 == 1:
+            print()
+            print('${{goto 200}}{}/{}'.format(save, i[3].text if i[3] is not None else 'NA'))
+            print('${voffset 9}')
+        else:
+            save = i[3].text
+
+        count += 1
 
 def get_icon(url):
     ''' Retrieve an icon and return the file name where it was saved. '''
@@ -46,7 +62,8 @@ class Forecast:
 
     def get_forecast_weather(self):
         ''' Return a list of words for forecasts. '''
-        return self.forecast_parameters.findall('./weather[@time-layout="' + layout_key + '"]/weather-conditions')
+        return self.forecast_parameters.findall('./weather[@time-layout="' + \
+            LAYOUT_KEY + '"]/weather-conditions')
 
     def get_forecast_conditions_icon(self):
         ''' Return a list of icons for forecasts. '''
@@ -58,35 +75,13 @@ class Forecast:
 
     def get_forecast_days(self):
         ''' Return a list of days that the forecasts refer to. '''
-        return self.forecast.findall('./time-layout/layout-key[.="' +
-            layout_key + '"]/../start-valid-time')
+        return self.forecast.findall('./time-layout/layout-key[.="' + \
+            LAYOUT_KEY + '"]/../start-valid-time')
 
     def get_more_weather_information(self):
         ''' Return a link to where to get more forecast weather information. '''
         return self.forecast.find('./moreWeatherInformation') or 'NA'
 
-    def print_forecast(self, zipped):
-        ''' Print out all the forecast information in conky format. '''
-        count = 0
-        for i in zipped:
-            offset = 100 if count % 2 == 1 else 0
-            row = int(count/2)
-
-            print("${{image {} -p {},{}}}".format(get_icon(i[0]), offset,
-                120 + row * 100, end=''))
-
-            print('${{goto 200}}{}: {}'.format(i[1].attrib['period-name'],
-                i[2].attrib["weather-summary"]), end='')
-
-            if count != 0 and count % 2 == 1:
-                print()
-                print('${{goto 200}}{}/{}'.format(save,
-                    i[3].text if i[3] is not None else 'NA'))
-                print('${voffset 9}')
-            else:
-                save = i[3].text
-
-            count += 1
 
     def get_forecast(self):
         ''' Gather all the forecast information and print it out. '''
@@ -96,13 +91,12 @@ class Forecast:
         words = self.get_forecast_weather()
         maxs = self.get_forecast_maximum_temperatures()
         mins = self.get_forecast_minimum_temperatures()
-        maxs_and_mins = [j for i in zip(maxs,mins) for j in i]
+        maxs_and_mins = [j for i in zip(maxs, mins) for j in i]
         if not (len(icons) == len(days) == len(words)):
             print('Error: inconsistent lenghts')
 
         zipped = zip(icons, days, words, maxs_and_mins)
-        # print(list(zipped))
-        self.print_forecast(zipped)
+        print_forecast(zipped)
 
 class Current:
     ''' A class to collect and display the NWS current information. '''
@@ -116,7 +110,8 @@ class Current:
 
     def get_current_temperature(self):
         ''' Return the current temperature. '''
-        return self.current_parameters.find('./temperature[@type="apparent"]/value').text or 'NA'
+        return self.current_parameters.find \
+            ('./temperature[@type="apparent"]/value').text or 'NA'
 
     def get_current_humidity(self):
         ''' Return the current relative humidity. '''
@@ -124,7 +119,8 @@ class Current:
 
     def get_current_weather(self):
         ''' Return the short words for the current condition. '''
-        return self.current_parameters.find('./weather/weather-conditions').attrib["weather-summary"] or 'NA'
+        return self.current_parameters.find \
+            ('./weather/weather-conditions').attrib["weather-summary"] or 'NA'
 
     def get_current_weather_icon(self):
         ''' Return the file name for the current icon. '''
@@ -148,28 +144,17 @@ class Current:
 
     def get_current(self):
         ''' Gather all the current information and print it out in conky format. '''
-        print('${{alignc}}{}'.format(
-            self.get_current_weather()))
+        print(self.get_current_weather(), end='')
+        print('${{goto 300}}Wind speed:${{goto 410}}{}'.format(self.get_current_wind_speed()))
 
-        print('Temp:${{goto 100}}{}'.format(
-            self.get_current_temperature()), end='')
-        print('${{goto 300}}Wind speed:${{goto 410}}{}'.format(
-            self.get_current_wind_speed()), end='')
-        print()
+        print('Temp:${{goto 100}}{}'.format(self.get_current_temperature()), end='')
+        print('${{goto 300}}Direction:${{goto 410}}{}'.format(self.get_current_wind_direction()))
 
-        print('RH:${{goto 100}}{}'.format(
-            self.get_current_humidity()), end='')
-        print('${{goto 300}}Direction:${{goto 410}}{}'.format(
-            self.get_current_wind_direction()), end='')
-        print()
-
-        print('Pressure:${{goto 100}}{}'.format(
-            self.get_current_pressure()), end='')
-
-        print()
+        print('RH:${{goto 100}}{}'.format(self.get_current_humidity()), end='')
+        print('${{goto 300}}Pressure:${{goto 410}}{}'.format(self.get_current_pressure()))
 
         filename = self.get_current_weather_icon()
-        print("${{image {} -p 200,25}}".format(filename))
+        print("${{image {} -p 200,0}}".format(filename))
 
 
 # https://stackoverflow.com/questions/59067649/assert-true-vs-assert-is-not-none
@@ -180,28 +165,34 @@ with open('~/src/conky/weather.gov') as response:
 '''
 # print('getting forecast', file=sys.stderr)
 
-with urllib.request.urlopen(url) as response:
-    html = response.read()
-    tree = xml.etree.ElementTree.parse(io.BytesIO(html))
+SOURCE_URL = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
+    '&lon=' + sys.argv[2] + '&unit=0&lg=english&FcstType=dwml'
 
-    root = tree.getroot()
+try:
+    with urllib.request.urlopen(SOURCE_URL) as response:
+        HTML = response.read()
+        TREE = xml.etree.ElementTree.parse(io.BytesIO(HTML))
 
-    forecast = root.find('./data[@type="forecast"]')
-    if forecast is None:
-        print('No forecast found')
+        ROOT = TREE.getroot()
 
-    fourteen = forecast.find('./time-layout/layout-key[.="' + layout_key + '"]')
-    if fourteen is None:
-        layout_key = 'k-p12h-n13-1'
-        thirteen = forecast.find('./time-layout/layout-key[.="' + layout_key + '"]')
-        if thirteen is None:
-            print('No time layout found')
-            sys.exit(1)
+        FORECAST = ROOT.find('./data[@type="forecast"]')
+        if FORECAST is None:
+            print('No forecast found')
 
-    current = root.find('./data[@type="current observations"]')
-    if current is None:
-        print('Error: no current conditions found')
-    else:
-        Current(current).get_current()
+        FOURTEEN = FORECAST.find('./time-layout/layout-key[.="' + LAYOUT_KEY + '"]')
+        if FOURTEEN is None:
+            LAYOUT_KEY = 'k-p12h-n13-1'
+            THIRTEEN = FORECAST.find('./time-layout/layout-key[.="' + LAYOUT_KEY + '"]')
+            if THIRTEEN is None:
+                print('No time layout found')
+                sys.exit(1)
 
-    Forecast(forecast).get_forecast()
+        CURRENT = ROOT.find('./data[@type="current observations"]')
+        if CURRENT is None:
+            print('Error: no current conditions found')
+        else:
+            Current(CURRENT).get_current()
+
+        Forecast(FORECAST).get_forecast()
+except:
+    print('Failed to fetch:' + SOURCE_URL)
