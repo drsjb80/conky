@@ -1,5 +1,5 @@
 <!-- vim: wm=0 -->
-Some conky scripts that I wrote.
+Some conky scripts that I wrote. Requires [Imagemagick](https://imagemagick.org/)
 
 * nws.{conf,py} displays a forecast that looks like ![Image of NWS](https://github.com/drsjb80/conky/blob/main/NWS.png)
 * nwsmap.{conf,sh} displays the current NWS US map  a forecast that looks like ![Image of NWS](https://github.com/drsjb80/conky/blob/main/NWSMap.png)
