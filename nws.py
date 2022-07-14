@@ -7,7 +7,7 @@ import os.path
 import urllib.request
 import xml.etree.ElementTree
 
-LAYOUT_KEY = 'k-p12h-n14-1'
+LAYOUT_KEY = ''
 
 def print_forecast(zipped):
     ''' Print out all the forecast information in conky format. '''
@@ -158,12 +158,13 @@ class Current:
 
 
 # https://stackoverflow.com/questions/59067649/assert-true-vs-assert-is-not-none
-'''
-with open('~/src/conky/weather.gov') as response:
-    html = response.read()
-    tree = xml.etree.ElementTree.parse(io.StringIO(html))
-'''
 # print('getting forecast', file=sys.stderr)
+
+'''
+    with open('/home/beaty/src/conky/MapClick.xml') as response:
+        HTML = response.read()
+        TREE = xml.etree.ElementTree.parse(io.StringIO(HTML))
+'''
 
 SOURCE_URL = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
     '&lon=' + sys.argv[2] + '&unit=0&lg=english&FcstType=dwml'
@@ -176,23 +177,27 @@ try:
         ROOT = TREE.getroot()
 
         FORECAST = ROOT.find('./data[@type="forecast"]')
-        if FORECAST is None:
+        if not FORECAST:
             print('No forecast found')
+            sys.exit(1)
 
-        FOURTEEN = FORECAST.find('./time-layout/layout-key[.="' + LAYOUT_KEY + '"]')
-        if FOURTEEN is None:
-            LAYOUT_KEY = 'k-p12h-n13-1'
-            THIRTEEN = FORECAST.find('./time-layout/layout-key[.="' + LAYOUT_KEY + '"]')
-            if THIRTEEN is None:
-                print('No time layout found')
-                sys.exit(1)
+        f = FORECAST.find('./time-layout/layout-key')
+        for layout in range(13, 16):
+            l = 'k-p12h-n' + str(layout) + '-1'
+            if f.text == l:
+                LAYOUT_KEY = l
+                break
+
+        if not LAYOUT_KEY:
+            print('No layout found')
+            sys.exit(1)
 
         CURRENT = ROOT.find('./data[@type="current observations"]')
-        if CURRENT is None:
+        if not CURRENT:
             print('Error: no current conditions found')
         else:
             Current(CURRENT).get_current()
 
         Forecast(FORECAST).get_forecast()
-except:
-    print('Failed to fetch:' + SOURCE_URL)
+except Exception as err:
+    print(err)

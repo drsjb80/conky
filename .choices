@@ -1,3 +1,9 @@
+conky -c dilbert.conf
+conky -c xkcd.conf
+conky -c nwsmap.conf
+conky -c nws.conf
+conky -c moon.conf
+----
 conky -dc dilbert.conf
 conky -dc xkcd.conf
 conky -dc nwsmap.conf
