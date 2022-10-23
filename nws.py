@@ -6,6 +6,9 @@ import sys
 import os.path
 import urllib.request
 import xml.etree.ElementTree
+import logging
+
+logging.basicConfig(level=logging.WARNING)
 
 LAYOUT_KEY = ''
 
@@ -168,6 +171,7 @@ class Current:
 
 SOURCE_URL = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
     '&lon=' + sys.argv[2] + '&unit=0&lg=english&FcstType=dwml'
+logging.debug(SOURCE_URL)
 
 try:
     with urllib.request.urlopen(SOURCE_URL) as response:
@@ -181,11 +185,14 @@ try:
             print('No forecast found')
             sys.exit(1)
 
-        f = FORECAST.find('./time-layout/layout-key')
-        for layout in range(13, 16):
-            l = 'k-p12h-n' + str(layout) + '-1'
-            if f.text == l:
-                LAYOUT_KEY = l
+        f = FORECAST.findall('./time-layout/layout-key')
+        for eff in f:
+            for layout in range(13, 16):
+                l = 'k-p12h-n' + str(layout) + '-1'
+                if eff.text == l:
+                    LAYOUT_KEY = l
+                    break
+            if LAYOUT_KEY != '':
                 break
 
         if not LAYOUT_KEY:
