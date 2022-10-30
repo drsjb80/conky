@@ -3,7 +3,7 @@
 import io
 import re
 import sys
-import os.path
+import os
 import urllib.request
 import xml.etree.ElementTree
 import logging
@@ -35,7 +35,7 @@ def print_forecast(zipped):
 
 def get_icon(url):
     ''' Retrieve an icon and return the file name where it was saved. '''
-    filename = '/tmp/' + re.sub(r'.*/', '', url.text)
+    filename = '/tmp/NWS/' + re.sub(r'.*/', '', url.text)
     if not os.path.isfile(filename):
         try:
             urllib.request.urlretrieve(url.text, filename)
@@ -174,6 +174,11 @@ SOURCE_URL = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
 logging.debug(SOURCE_URL)
 
 try:
+    try:
+        os.mkdir("/tmp/NWS")
+    except FileExistsError as FEE:
+        logging.debug(FEE)
+
     with urllib.request.urlopen(SOURCE_URL) as response:
         HTML = response.read()
         TREE = xml.etree.ElementTree.parse(io.BytesIO(HTML))
