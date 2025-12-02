@@ -3,11 +3,14 @@
 import io
 import re
 import sys
-import os.path
+import os
 import urllib.request
 import xml.etree.ElementTree
+import logging
 
-LAYOUT_KEY = 'k-p12h-n14-1'
+logging.basicConfig(level=logging.WARNING)
+
+LAYOUT_KEY = ''
 
 def print_forecast(zipped):
     ''' Print out all the forecast information in conky format. '''
@@ -32,7 +35,7 @@ def print_forecast(zipped):
 
 def get_icon(url):
     ''' Retrieve an icon and return the file name where it was saved. '''
-    filename = '/tmp/' + re.sub(r'.*/', '', url.text)
+    filename = '/tmp/NWS/' + re.sub(r'.*/', '', url.text)
     if not os.path.isfile(filename):
         try:
             urllib.request.urlretrieve(url.text, filename)
@@ -96,7 +99,6 @@ class Forecast:
             print('Error: inconsistent lenghts')
 
         zipped = zip(icons, days, words, maxs_and_mins)
-        # print(list(zipped))
         print_forecast(zipped)
 
 class Current:
@@ -159,17 +161,24 @@ class Current:
 
 
 # https://stackoverflow.com/questions/59067649/assert-true-vs-assert-is-not-none
-'''
-with open('~/src/conky/weather.gov') as response:
-    html = response.read()
-    tree = xml.etree.ElementTree.parse(io.StringIO(html))
-'''
 # print('getting forecast', file=sys.stderr)
+
+'''
+    with open('/home/beaty/src/conky/MapClick.xml') as response:
+        HTML = response.read()
+        TREE = xml.etree.ElementTree.parse(io.StringIO(HTML))
+'''
 
 SOURCE_URL = 'https://forecast.weather.gov/MapClick.php?lat=' + sys.argv[1] + \
     '&lon=' + sys.argv[2] + '&unit=0&lg=english&FcstType=dwml'
+logging.debug(SOURCE_URL)
 
 try:
+    try:
+        os.mkdir("/tmp/NWS")
+    except FileExistsError as FEE:
+        logging.debug(FEE)
+
     with urllib.request.urlopen(SOURCE_URL) as response:
         HTML = response.read()
         TREE = xml.etree.ElementTree.parse(io.BytesIO(HTML))
@@ -177,23 +186,30 @@ try:
         ROOT = TREE.getroot()
 
         FORECAST = ROOT.find('./data[@type="forecast"]')
-        if FORECAST is None:
+        if not FORECAST:
             print('No forecast found')
+            sys.exit(1)
 
-        FOURTEEN = FORECAST.find('./time-layout/layout-key[.="' + LAYOUT_KEY + '"]')
-        if FOURTEEN is None:
-            LAYOUT_KEY = 'k-p12h-n13-1'
-            THIRTEEN = FORECAST.find('./time-layout/layout-key[.="' + LAYOUT_KEY + '"]')
-            if THIRTEEN is None:
-                print('No time layout found')
-                sys.exit(1)
+        f = FORECAST.findall('./time-layout/layout-key')
+        for eff in f:
+            for layout in range(13, 16):
+                l = 'k-p12h-n' + str(layout) + '-1'
+                if eff.text == l:
+                    LAYOUT_KEY = l
+                    break
+            if LAYOUT_KEY != '':
+                break
+
+        if not LAYOUT_KEY:
+            print('No layout found')
+            sys.exit(1)
 
         CURRENT = ROOT.find('./data[@type="current observations"]')
-        if CURRENT is None:
+        if not CURRENT:
             print('Error: no current conditions found')
         else:
             Current(CURRENT).get_current()
 
         Forecast(FORECAST).get_forecast()
-except:
-    print('Failed to fetch:' + SOURCE_URL)
+except Exception as err:
+    print(err)
